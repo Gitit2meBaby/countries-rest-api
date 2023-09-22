@@ -1,5 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     let jsonData;
+    let countryNames = []; // Initialize an empty array to store country names
+
 
     async function fetchAPI() {
         try {
@@ -7,43 +9,72 @@ document.addEventListener('DOMContentLoaded', () => {
             jsonData = await response.json();
             console.log('API loaded successfully:');
 
-            // Create cards here, inside the fetchAPI function
-            const cardContainer = document.getElementById('cardContainer');
+
+            // CREATE CARDS ON PAGE LOAD
             jsonData.forEach(item => {
+                const cardContainer = document.getElementById('cardContainer');
+
                 const card = document.createElement('div');
-                card.classList.add('card');
+                card.innerHTML = cardTemplate(
+                    item.name.common,
+                    item.population,
+                    item.region,
+                    item.capital,
+                    item.flags.png,
+                    `${item.name.common} Flag`
+                );
 
-                const cardImage = document.createElement('img');
-                cardImage.src = item.flags.png;
-                cardImage.alt = `${item.name.common} Flag`;
-
-                const cardInfo = document.createElement('div');
-                cardInfo.classList.add('card-info');
-
-                const cardTitle = document.createElement('h2');
-                cardTitle.textContent = item.name.common;
-
-                const population = document.createElement('p');
-                population.textContent = `Population: ${item.population}`;
-
-                const region = document.createElement('p');
-                region.textContent = `Region: ${item.region}`;
-
-                const capital = document.createElement('p');
-                capital.textContent = `Capital: ${item.capital}`;
-
-                // Append elements to the card
-                cardInfo.appendChild(cardTitle);
-                cardInfo.appendChild(population);
-                cardInfo.appendChild(region);
-                cardInfo.appendChild(capital);
-
-                card.appendChild(cardImage);
-                card.appendChild(cardInfo);
-
-                // Append the card to the container
                 cardContainer.appendChild(card);
             });
+
+            // SEARCH BAR EVENT LISTENER
+            const search = document.querySelector('#search');
+            const suggestionContainer = document.querySelector('.suggestion-container')
+            search.addEventListener('keyup', handleSearch)
+            countryNames = jsonData.map(item => item.name.common);
+
+
+            function handleSearch() {
+                const inputValue = search.value.toLowerCase();
+                const matchingCountries = countryNames.filter(country =>
+                    country.toLowerCase().startsWith(inputValue)
+                );
+
+                // Clear any previous suggestions
+                clearSuggestions();
+
+                const suggestion = document.createElement('div');
+                // Display matching country suggestions
+                matchingCountries.forEach(countryName => {
+                    const suggestionText = document.createElement('p')
+                    suggestionText.textContent = countryName;
+                    suggestion.classList.add('suggestion');
+
+                    // Add a click event listener to select the suggestion
+                    suggestionText.addEventListener('click', () => {
+                        search.value = countryName;
+                        clearSuggestions();
+                    });
+
+                    // Append the suggestion to a container
+                    suggestion.appendChild(suggestionText)
+                    suggestionContainer.appendChild(suggestion);
+
+                    if (search.value == '') {
+                        suggestionContainer.removeChild(suggestion)
+                    }
+                });
+            }
+
+
+
+            function clearSuggestions() {
+                // Clear previous suggestions
+                while (suggestionContainer.firstChild) {
+                    suggestionContainer.removeChild(suggestionContainer.firstChild);
+                }
+            }
+
         } catch (error) {
             console.error('Error fetching API:', error);
         }
@@ -52,12 +83,35 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchAPI();
 });
 
+// CARD HTML TEMPLATE
+const cardTemplate = (name, population, region, capital, flagSrc, flagAlt) => `
+    <div class="card">
+        <img src="${flagSrc}" alt="${flagAlt}">
+        <div class="card-info">
+            <h2>${name}</h2>
+            <p>Population: <span>${population.toLocaleString()}</span></p>
+            <p>Region: <span>${region}</span></p>
+            <p>Capital: <span>${capital}</span></p>
+        </div>
+    </div>
+`;
+
+
+
+
+
+
+
+
+
+
+
+
 
 const lightModeMoon = document.querySelector('#lightModeMoon');
 const darkModeMoon = document.querySelector('#darkModeMoon');
 const modeText = document.querySelector('#modeText');
 
-const search = document.querySelector('#search');
 
 const dropdown = document.querySelector('#dropdown');
 

@@ -5,6 +5,7 @@
 
 * {
     box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
 }
 
 body {
@@ -33,6 +34,7 @@ header {
     background-color: rgb(235, 235, 235);
     padding: var(--padding-standard);
     gap: var(--padding-standard);
+    max-width: 100vw;
 }
 
 .search-container {
@@ -44,7 +46,6 @@ header {
 .input-wrapper {
     position: relative;
     width: 40%;
-
 }
 
 .input-wrapper input {
@@ -67,21 +68,67 @@ header {
     left: 2rem;
 }
 
+.suggestion {
+    position: absolute;
+    top: 4rem;
+    background-color: white;
+    padding: 1rem;
+    box-shadow: 0 0 1px 5px rgba(188, 187, 187, 0.01);
+    border-radius: .5rem;
+    width: 250px;
+    height: 100px;
+    outline: none;
+}
+
+.suggestion p:hover {
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.search-container select {
+    width: 20vw;
+    border: none;
+    padding: 1rem;
+    box-shadow: var(--box-shadow);
+    border-radius: .5rem;
+}
+
 /* CARDS */
 .main-grid {
     display: grid;
     gap: var(--padding-standard);
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     grid-auto-rows: 1fr;
+    grid-auto-flow: dense;
 }
 
 .card {
     background-color: white;
-    height: 50vw;
+    height: 50vh;
+}
+
+.card img {
+    width: 100%;
 }
 
 .card-info {
-    padding: 1rem;
+    padding: 2rem;
+}
+
+.card h2 {
+    margin: 0;
+    padding-bottom: 1rem;
+    font-size: 1.4rem;
+}
+
+.card-info p {
+    font-weight: 700;
+    margin: 0;
+    padding-bottom: 0.5rem;
+}
+
+.card-info span {
+    font-weight: 400;
 }
 
 
