@@ -46,8 +46,13 @@
                 </svg>
                 <div class="suggestion-container"></div>
             </div>
-            <select id="dropdown" placeholder="Filter by Region">
-                <option></option>
+            <select id="dropdown">
+                <option value="" disabled selected hidden>Filter by Region</option>
+                <option class="region-dropdown">Africa</option>
+                <option class="region-dropdown">Americas</option>
+                <option class="region-dropdown">Asia</option>
+                <option class="region-dropdown">Europe</option>
+                <option class="region-dropdown" data-region="Oceania">Oceania</option>
             </select>
         </section>
 

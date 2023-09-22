@@ -54,6 +54,7 @@ header {
     padding: 1rem;
     box-shadow: var(--box-shadow);
     border-radius: .5rem;
+    outline: none;
 }
 
 .input-wrapper input::placeholder {
@@ -76,7 +77,6 @@ header {
     box-shadow: 0 0 1px 5px rgba(188, 187, 187, 0.01);
     border-radius: .5rem;
     width: 250px;
-    height: 100px;
     outline: none;
 }
 
@@ -98,13 +98,15 @@ header {
     display: grid;
     gap: var(--padding-standard);
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    grid-auto-rows: 1fr;
     grid-auto-flow: dense;
+    grid-auto-rows: auto;
 }
 
 .card {
     background-color: white;
-    height: 50vh;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .card img {
