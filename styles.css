@@ -3,9 +3,15 @@
     --box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
 
+.light-theme {
+    --paragraph-text: rgb(94, 94, 94);
+    --accent-text: rgb(56, 56, 56);
+}
+
 * {
     box-sizing: border-box;
     font-family: 'Roboto', sans-serif;
+    font-size: 15px;
 }
 
 body {
@@ -17,14 +23,23 @@ header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 0rem var(--padding-standard);
+    padding: .5rem var(--padding-standard);
     box-shadow: var(--box-shadow);
+}
+
+header h1 {
+    font-size: 1.6rem;
+    letter-spacing: .01rem;
 }
 
 .dark-mode-wrapper {
     display: flex;
     align-items: center;
     gap: .5rem;
+}
+
+.dark-mode-wrapper h3 {
+    color: var(--paragraph-text);
 }
 
 /* MAIN */
@@ -93,6 +108,11 @@ header {
     border-radius: .5rem;
 }
 
+#dropdown {
+    color: var(--paragraph-text);
+    font-weight: 500;
+}
+
 /* CARDS */
 .main-grid {
     display: grid;
@@ -123,18 +143,100 @@ header {
     font-size: 1.4rem;
 }
 
+.stats,
 .card-info p {
-    font-weight: 700;
+    color: var(--accent-text);
+    font-weight: 600;
     margin: 0;
     padding-bottom: 0.5rem;
 }
 
+
 .card-info span {
+    color: var(--paragraph-text);
     font-weight: 400;
 }
 
+/* CHOSEN COUNTRY PAGE */
+.chosen-country {
+    display: flex;
+    flex-direction: column;
+}
 
+.button-container {
+    padding: var(--padding-standard) var(--padding-standard) 0rem var(--padding-standard);
+}
 
+.chosen-country-grid>div {
+    display: grid;
+    grid-template-columns: 50% 1fr;
+    padding: var(--padding-standard);
+}
+
+.flag-image img {
+    width: 80%;
+}
+
+.country-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.country-info h2 {
+    margin: 0;
+    padding-bottom: 1rem;
+    font-size: 1.8rem;
+}
+
+.stats {
+    display: grid;
+    grid-template-columns: 50% 1fr;
+    gap: var(--padding-standard);
+
+}
+
+.stats span {
+    font-weight: 400;
+}
+
+.border-countries {
+    display: flex;
+    gap: 1rem;
+}
+
+.border-countries p {
+    color: var(--accent-text);
+    font-weight: 600;
+    margin: 0;
+    padding-top: 0.5rem;
+}
+
+.border-countries-btn-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-auto-flow: dense;
+    grid-auto-rows: auto;
+    gap: .5rem;
+}
+
+/* BUTTONS */
+.primary-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: .5rem;
+    padding: .5rem 2rem;
+    background-color: transparent;
+    border: none;
+    box-shadow: var(--box-shadow);
+    color: var(--paragraph-text);
+    cursor: pointer;
+}
+
+.border-btn {
+    width: 100%;
+}
 
 .hidden {
     display: none;
