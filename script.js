@@ -8,7 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const response = await fetch('https://restcountries.com/v3.1/all');
             jsonData = await response.json();
             console.log('API loaded successfully:');
-            console.log('jsonData:', jsonData); // Log the entire jsonData array for inspection
+            console.log('jsonData:', jsonData);
 
             countryNames = jsonData.map(item => item.name.common);
 
@@ -31,12 +31,11 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             createCards();
-            cards = document.querySelectorAll('.card'); // Assign cards here
+            cards = document.querySelectorAll('.card');
 
-            // Wrap the card container in a parent element
+            // Append the cards to the container
             const cardWrapper = document.querySelector('.main-grid');
             cardWrapper.addEventListener('click', (event) => {
-                // Check if a card was clicked
                 const card = event.target.closest('.card');
                 if (card) {
                     const index = Array.from(cards).indexOf(card);
@@ -80,6 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return '';
                 }
 
+                // assigning all the parameters onto my template
                 selectedCountryElement.innerHTML = selectedCountryTemplate(
                     item.flags.png,
                     `${item.name.common} Flag`,
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
 
-            // Function to display the selected country HTML 
+            // Function to display the selected country container 
             const mainPage = document.querySelector('.home');
             function displaySelectedCountry(selectedCountryElement) {
                 mainPage.classList.add('hidden');
@@ -125,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Add a click event listener to each suggestion
                     suggestionText.addEventListener('click', () => {
-                        const chosenCountryGrid = document.querySelector('.chosen-country-grid')
+                        const chosenCountryGrid = document.querySelector('.chosen-country-grid');
                         const selectedItem = jsonData.find(item => item.name.common === countryName);
                         if (selectedItem) {
                             const selectedCountryElement = createSelectedCountryElement(selectedItem);
@@ -134,13 +134,19 @@ document.addEventListener('DOMContentLoaded', () => {
                             chosenCountry.classList.remove('hidden');
                             chosenCountryGrid.innerHTML = '';
                             chosenCountryGrid.appendChild(selectedCountryElement);
+
+                            // Call createBorderButtons with the correct jsonData and index
+                            const index = jsonData.indexOf(selectedItem);
+                            if (index !== -1 && selectedItem.borders) {
+                                createBorderButtons(jsonData, index, selectedItem.borders);
+                            }
                         }
                     });
                 });
             }
 
 
-            // Attach a keyup event listener to the search input
+            // Attach a keyup event listener to the search input to narrow down search options
             search.addEventListener('keyup', createSuggestions);
 
 
@@ -179,12 +185,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const suggestionText = document.querySelectorAll('.suggestion-text');
 
             suggestionText.forEach((suggestion, index) => {
-                console.log('Adding click listener to suggestion', index);
                 suggestion.addEventListener('click', () => {
                     const item = jsonData[index];
                     const selectedCountryElement = createSelectedCountryElement(item);
 
-                    console.log('Suggestion clicked');
                     displaySelectedCountry(selectedCountryElement);
                     chosenCountry.classList.remove('hidden');
                     chosenCountryGrid.innerHTML = '';
@@ -271,19 +275,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 });
 
-                // After creating the new cards, don't forget to update the 'cards' variable
                 cards = document.querySelectorAll('.card');
             });
 
-
-
-
-
-
-
-
             function createBorderButtons(jsonData, index, borderAlpha3Codes) {
-                const currentCountry = jsonData[index];
                 const buttonContainer = document.querySelector('.border-countries-btn-wrapper');
 
                 // Create buttons for each bordering country

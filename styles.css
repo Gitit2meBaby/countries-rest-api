@@ -60,6 +60,12 @@ header h1 {
     cursor: pointer;
 }
 
+@media screen and (max-width: 700px) {
+    header {
+        padding: 1rem;
+    }
+}
+
 /* MAIN */
 .home {
     display: flex;
@@ -89,6 +95,7 @@ header h1 {
     border-radius: .5rem;
     outline: none;
     background-color: var(--header-background);
+    color: var(--header-text);
 }
 
 .input-wrapper input::placeholder {
@@ -108,7 +115,7 @@ header h1 {
     top: 4rem;
     background-color: var(--header-background);
     padding: 1rem;
-    box-shadow: 0 0 1px 5px rgba(188, 187, 187, 0.01);
+    box-shadow: var(--box-shadow);
     border-radius: .5rem;
     width: 250px;
     outline: none;
@@ -117,6 +124,10 @@ header h1 {
 .suggestion p:hover {
     font-weight: 700;
     cursor: pointer;
+}
+
+.suggestion-text {
+    color: var(--header-text);
 }
 
 .search-container select {
@@ -131,6 +142,39 @@ header h1 {
     background-color: var(--header-background);
     color: var(--paragraph-text);
     font-weight: 500;
+}
+
+
+@media screen and (max-width: 700px) {
+    .home {
+        padding: 1rem;
+        gap: 2rem;
+        max-width: 100vw;
+    }
+
+    .search-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 2rem;
+        padding-top: 1rem;
+    }
+
+    .input-wrapper {
+        width: 100%;
+    }
+
+    .input-wrapper svg {
+        top: 1.1rem;
+    }
+
+    .search-container select {
+        width: 50vw;
+        border: none;
+        padding: 1rem;
+        box-shadow: var(--box-shadow);
+        border-radius: .5rem;
+    }
+
 }
 
 /* CARDS */
@@ -245,6 +289,53 @@ header h1 {
     grid-auto-flow: dense;
     grid-auto-rows: auto;
     gap: .5rem;
+}
+
+@media screen and (max-width: 700px) {
+    .chosen-country {
+        height: auto;
+    }
+
+    .button-container {
+        padding: 2rem;
+    }
+
+    .chosen-country-grid>div {
+        display: flex;
+        flex-direction: column;
+        padding: 2rem;
+    }
+
+    .flag-image img {
+        width: 100%;
+    }
+
+    .country-info {
+        padding-top: 2rem;
+    }
+
+    .country-info h2 {
+        padding-bottom: 1rem;
+        font-size: 1.4rem;
+    }
+
+    .stats {
+        display: flex;
+        flex-direction: column;
+        gap: .5rem;
+    }
+
+    .border-countries {
+        flex-direction: column;
+    }
+
+    .border-countries-btn-wrapper {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-flow: dense;
+        grid-auto-rows: auto;
+        gap: .5rem;
+    }
 }
 
 /* BUTTONS */
