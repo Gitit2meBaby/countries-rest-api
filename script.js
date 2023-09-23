@@ -12,10 +12,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
             countryNames = jsonData.map(item => item.name.common);
 
-            // CREATE CARDS ON PAGE LOAD
+
+            // CREATING ALL CARDS FROM JSON DATA AVAILABLE
             function createCards() {
                 jsonData.forEach(item => {
-
                     const card = document.createElement('div');
                     card.innerHTML = cardTemplate(
                         item.name.common,
@@ -30,9 +30,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
 
-            createCards()
+            createCards();
             cards = document.querySelectorAll('.card'); // Assign cards here
 
+            // Wrap the card container in a parent element
+            const cardWrapper = document.querySelector('.main-grid');
+            cardWrapper.addEventListener('click', (event) => {
+                // Check if a card was clicked
+                const card = event.target.closest('.card');
+                if (card) {
+                    const index = Array.from(cards).indexOf(card);
+                    if (index !== -1) {
+                        const item = jsonData[index];
+                        chosenCountryGrid = document.querySelector('.chosen-country-grid');
+                        const selectedCountryElement = createSelectedCountryElement(item);
+
+                        displaySelectedCountry(selectedCountryElement);
+                        chosenCountry.classList.remove('hidden');
+                        chosenCountryGrid.innerHTML = '';
+                        chosenCountryGrid.appendChild(selectedCountryElement);
+                        if (item.borders) {
+                            createBorderButtons(jsonData, index, item.borders);
+                        }
+                    }
+                }
+            });
 
             // function to create the selected country page
             function createSelectedCountryElement(item) {
@@ -75,24 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 return selectedCountryElement;
             }
 
-            //event listener when clicking on a card
-            cards.forEach((card, index) => {
-                card.addEventListener('click', () => {
-                    const item = jsonData[index];
-                    chosenCountryGrid = document.querySelector('.chosen-country-grid')
-                    const selectedCountryElement = createSelectedCountryElement(item);
-
-
-                    displaySelectedCountry(selectedCountryElement);
-                    chosenCountry.classList.remove('hidden');
-                    chosenCountryGrid.innerHTML = '';
-                    chosenCountryGrid.appendChild(selectedCountryElement);
-                    if (item.borders) {
-                        createBorderButtons(jsonData, index, item.borders);
-                    }
-                });
-            });
-
 
             // Function to display the selected country HTML 
             const mainPage = document.querySelector('.home');
@@ -100,10 +104,12 @@ document.addEventListener('DOMContentLoaded', () => {
                 mainPage.classList.add('hidden');
             }
 
+            // CREATE THE SEARCH DROPDOWN
             function createSuggestions() {
                 const search = document.querySelector('#search');
                 const suggestionContainer = document.querySelector('.suggestion-container');
-                suggestionContainer.classList.add('suggestion')
+
+                suggestionContainer.classList.add('suggestion');
                 const inputValue = search.value.toLowerCase();
                 const matchingCountries = countryNames.filter(country =>
                     country.toLowerCase().startsWith(inputValue)
@@ -113,25 +119,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 matchingCountries.forEach((countryName, index) => {
                     const suggestionText = document.createElement('p');
-                    const chosenCountryGrid = document.querySelector('.chosen-country-grid')
                     suggestionText.textContent = countryName;
                     suggestionText.classList.add('suggestion-text');
                     suggestionContainer.appendChild(suggestionText);
 
-
                     // Add a click event listener to each suggestion
                     suggestionText.addEventListener('click', () => {
-                        const item = jsonData[index];
-                        const selectedCountryElement = createSelectedCountryElement(item);
-
-                        displaySelectedCountry(selectedCountryElement);
-                        chosenCountryGrid.classList.remove('hidden');
-                        chosenCountry.classList.remove('hidden');
-                        chosenCountryGrid.innerHTML = '';
-                        chosenCountryGrid.appendChild(selectedCountryElement);
+                        const chosenCountryGrid = document.querySelector('.chosen-country-grid')
+                        const selectedItem = jsonData.find(item => item.name.common === countryName);
+                        if (selectedItem) {
+                            const selectedCountryElement = createSelectedCountryElement(selectedItem);
+                            displaySelectedCountry(selectedCountryElement);
+                            chosenCountryGrid.classList.remove('hidden');
+                            chosenCountry.classList.remove('hidden');
+                            chosenCountryGrid.innerHTML = '';
+                            chosenCountryGrid.appendChild(selectedCountryElement);
+                        }
                     });
                 });
             }
+
 
             // Attach a keyup event listener to the search input
             search.addEventListener('keyup', createSuggestions);
@@ -163,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     suggestionContainer.appendChild(suggestion);
 
                     if (search.value == '') {
-                        suggestionContainer.removeChild(suggestion)
+                        clearSuggestions()
                     }
                 });
             }
@@ -188,10 +195,37 @@ document.addEventListener('DOMContentLoaded', () => {
 
             function clearSuggestions() {
                 const suggestionContainer = document.querySelector('.suggestion-container');
+                if (suggestionContainer.value == '') {
+                    suggestionContainer.classList.add('hidden')
+                } else {
+                    suggestionContainer.classList.remove('hidden')
+                }
                 while (suggestionContainer.firstChild) {
                     suggestionContainer.removeChild(suggestionContainer.firstChild);
                 }
             }
+
+            cardContainer.addEventListener('click', (event) => {
+                const card = event.target.closest('.card');
+                console.log('clicked')
+                if (card) {
+                    const index = Array.from(cards).indexOf(card);
+                    if (index !== -1) {
+                        const item = jsonData[index];
+                        chosenCountryGrid = document.querySelector('.chosen-country-grid');
+                        const selectedCountryElement = createSelectedCountryElement(item);
+
+                        displaySelectedCountry(selectedCountryElement);
+                        chosenCountry.classList.remove('hidden');
+                        chosenCountryGrid.innerHTML = '';
+                        chosenCountryGrid.appendChild(selectedCountryElement);
+                        if (item.borders) {
+                            createBorderButtons(jsonData, index, item.borders);
+                        }
+                    }
+                }
+            });
+
 
             // HANDLE REGION FILTER WITH DROPDOWN
             const regionDropdown = document.querySelector('#dropdown');
@@ -216,9 +250,37 @@ document.addEventListener('DOMContentLoaded', () => {
                             `${item.name.common} Flag`
                         );
                         cardContainer.appendChild(card);
+                        // Reassign the click event listener to the new card
+                        card.addEventListener('click', (event) => {
+                            console.log('clicked');
+                            const index = Array.from(cards).indexOf(card);
+                            if (index !== -1) {
+                                const item = jsonData[index];
+                                chosenCountryGrid = document.querySelector('.chosen-country-grid');
+                                const selectedCountryElement = createSelectedCountryElement(item);
+
+                                displaySelectedCountry(selectedCountryElement);
+                                chosenCountry.classList.remove('hidden');
+                                chosenCountryGrid.innerHTML = '';
+                                chosenCountryGrid.appendChild(selectedCountryElement);
+                                if (item.borders) {
+                                    createBorderButtons(jsonData, index, item.borders);
+                                }
+                            }
+                        });
                     }
                 });
+
+                // After creating the new cards, don't forget to update the 'cards' variable
+                cards = document.querySelectorAll('.card');
             });
+
+
+
+
+
+
+
 
             function createBorderButtons(jsonData, index, borderAlpha3Codes) {
                 const currentCountry = jsonData[index];
@@ -226,22 +288,33 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 // Create buttons for each bordering country
                 borderAlpha3Codes.forEach((alpha3Code) => {
-                    // Find the country object with the matching alpha3Code
-                    const borderCountry = jsonData.find((country) => country.cca3 === alpha3Code); // Use 'cca3' property for matching
+                    const borderCountry = jsonData.find((country) => country.cca3 === alpha3Code);
 
                     if (borderCountry) {
                         const button = document.createElement('button');
-                        button.classList.add('primary-btn', 'border-btn')
+                        button.classList.add('primary-btn', 'border-btn');
                         button.textContent = borderCountry.name.common;
                         buttonContainer.appendChild(button);
+
+                        button.addEventListener('click', () => {
+                            const borderCountryIndex = jsonData.findIndex((country) => country.cca3 === alpha3Code);
+                            console.log(borderCountryIndex);
+                            if (borderCountryIndex !== -1) {
+                                const borderCountry = jsonData[borderCountryIndex];
+                                const selectedCountryElement = createSelectedCountryElement(borderCountry);
+                                displaySelectedCountry(selectedCountryElement);
+                                chosenCountryGrid.innerHTML = '';
+                                chosenCountryGrid.appendChild(selectedCountryElement);
+                                if (borderCountry.borders) {
+                                    createBorderButtons(jsonData, borderCountryIndex, borderCountry.borders);
+                                }
+                            }
+                        });
                     } else {
                         console.log(`No country found for alpha3Code: ${alpha3Code}`);
                     }
                 });
             }
-
-
-
         } catch (error) {
             console.error('Error fetching API:', error);
         }
@@ -304,11 +377,24 @@ back.addEventListener('click', () => {
     chosenCountry.classList.add('hidden');
     mainPage.classList.remove('hidden');
 
+    // Hide the suggestion container when the back button is pressed
+    const suggestionContainer = document.querySelector('.suggestion-container');
+    suggestionContainer.classList.add('hidden');
+    search.value = ''
+});
 
-})
 
+// DARK THEME SWITCH
 const lightModeMoon = document.querySelector('#lightModeMoon');
 const darkModeMoon = document.querySelector('#darkModeMoon');
-const modeText = document.querySelector('#modeText');
+const modeSelector = document.querySelector('.dark-mode-wrapper');
+const body = document.querySelector('.body')
+
+modeSelector.addEventListener('click', () => {
+    body.classList.toggle('light-theme')
+    body.classList.toggle('dark-theme')
+    lightModeMoon.classList.toggle('hidden')
+    darkModeMoon.classList.toggle('hidden')
+})
 
 
